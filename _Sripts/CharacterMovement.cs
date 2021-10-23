@@ -9,25 +9,15 @@ public class CharacterMovement : MonoBehaviour
 
     private GameObject selectedObject;
 
-    private FlashFeedback flashFeedback;
-
     public void HandleSelection(GameObject detectedObject)
     {
-        if (detectedObject != null)
-        {
-            this.selectedObject = detectedObject;
-            flashFeedback = selectedObject.GetComponent<FlashFeedback>();
-            flashFeedback.PlayFeedback();
-        }
-            
+        this.selectedObject = detectedObject;
     }
 
     public void HandleMovement(Vector3 endPosition)
     {
         if (selectedObject == null)
             return;
-
-        flashFeedback.StopFeedback();
 
         if (Vector2.Distance(endPosition, selectedObject.transform.position) > threshold)
         {
