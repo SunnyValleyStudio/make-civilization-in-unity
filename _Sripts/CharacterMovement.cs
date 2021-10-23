@@ -5,52 +5,29 @@ using UnityEngine;
 
 public class CharacterMovement : MonoBehaviour
 {
-    public Camera currentCamera;
-    public LayerMask layerMask;
     public float threshold = 0.5f;
 
     private GameObject selectedObject;
 
     private FlashFeedback flashFeedback;
 
-    // Update is called once per frame
-    void Update()
+    public void HandleSelection(GameObject detectedObject)
     {
-        if (Input.GetMouseButtonDown(0))
+        if (detectedObject != null)
         {
-            HandleSelection();
-        }
-
-        if (Input.GetMouseButtonUp(0))
-        {
-            HandleMovement();
-        }
-    }
-
-    private void HandleSelection()
-    {
-        Vector3 mouseInput = currentCamera.ScreenToWorldPoint(Input.mousePosition);
-        mouseInput.z = 0f;
-        Collider2D colider = Physics2D.OverlapPoint(mouseInput, layerMask);
-        selectedObject = colider == null ? null : colider.gameObject;
-
-        if (selectedObject != null)
-        {
+            this.selectedObject = detectedObject;
             flashFeedback = selectedObject.GetComponent<FlashFeedback>();
             flashFeedback.PlayFeedback();
         }
             
     }
 
-    private void HandleMovement()
+    public void HandleMovement(Vector3 endPosition)
     {
         if (selectedObject == null)
             return;
 
         flashFeedback.StopFeedback();
-
-        Vector3 endPosition = currentCamera.ScreenToWorldPoint(Input.mousePosition);
-        endPosition.z = 0f;
 
         if (Vector2.Distance(endPosition, selectedObject.transform.position) > threshold)
         {
