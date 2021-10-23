@@ -11,6 +11,7 @@ public class CharacterMovement : MonoBehaviour
 
     private GameObject selectedObject;
 
+    private FlashFeedback flashFeedback;
 
     // Update is called once per frame
     void Update()
@@ -32,12 +33,21 @@ public class CharacterMovement : MonoBehaviour
         mouseInput.z = 0f;
         Collider2D colider = Physics2D.OverlapPoint(mouseInput, layerMask);
         selectedObject = colider == null ? null : colider.gameObject;
+
+        if (selectedObject != null)
+        {
+            flashFeedback = selectedObject.GetComponent<FlashFeedback>();
+            flashFeedback.PlayFeedback();
+        }
+            
     }
 
     private void HandleMovement()
     {
         if (selectedObject == null)
             return;
+
+        flashFeedback.StopFeedback();
 
         Vector3 endPosition = currentCamera.ScreenToWorldPoint(Input.mousePosition);
         endPosition.z = 0f;
