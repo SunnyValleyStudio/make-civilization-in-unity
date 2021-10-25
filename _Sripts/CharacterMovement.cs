@@ -3,25 +3,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class CharacterMovement : MonoBehaviour
 {
     public float threshold = 0.5f;
 
-    private GameObject selectedObject;
+    private Unit selectedUnit;
 
     public void HandleSelection(GameObject detectedObject)
     {
-        this.selectedObject = detectedObject;
+        if (detectedObject == null)
+            return;
+
+        this.selectedUnit = detectedObject.GetComponent<Unit>();
     }
 
     public void HandleMovement(Vector3 endPosition)
     {
-        if (selectedObject == null)
+        if (this.selectedUnit == null)
             return;
 
-        if (Vector2.Distance(endPosition, selectedObject.transform.position) > threshold)
+        if (this.selectedUnit.CanStillMove() == false)
+            return;
+
+        if (Vector2.Distance(endPosition, this.selectedUnit.transform.position) > threshold)
         {
-            Vector2 direction = (endPosition - selectedObject.transform.position);
+            Vector2 direction = (endPosition - this.selectedUnit.transform.position);
 
             if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
             {
@@ -33,7 +40,7 @@ public class CharacterMovement : MonoBehaviour
                 float sign = Mathf.Sign(direction.y);
                 direction = Vector2.up * sign;
             }
-            selectedObject.transform.position += (Vector3)direction;
+            this.selectedUnit.HandleMovement(direction, 10);
         }
     }
 
