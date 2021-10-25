@@ -13,8 +13,10 @@ public class CharacterMovement : MonoBehaviour
     public void HandleSelection(GameObject detectedObject)
     {
         if (detectedObject == null)
+        {
+            this.selectedUnit = null;
             return;
-
+        }
         this.selectedUnit = detectedObject.GetComponent<Unit>();
     }
 

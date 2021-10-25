@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Unit : MonoBehaviour
 {
@@ -8,6 +9,8 @@ public class Unit : MonoBehaviour
     private int maxMovementPoints = 20;
 
     private int currentMovementPoints;
+
+    public UnityEvent FinishedMoving;
 
     void Start()
     {
@@ -28,6 +31,9 @@ public class Unit : MonoBehaviour
         }
 
         currentMovementPoints -= movementCost;
+
+        if (currentMovementPoints <= 0)
+            FinishedMoving?.Invoke();
 
         transform.position += cardinalDirection;
     }
