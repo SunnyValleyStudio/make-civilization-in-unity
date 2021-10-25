@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SelectionManager : MonoBehaviour
+public class SelectionManager : MonoBehaviour, ITurnDependant
 {
     FlashFeedback flashFeedback;
 
@@ -23,6 +23,11 @@ public class SelectionManager : MonoBehaviour
 
         flashFeedback = detectedColldier.GetComponent<FlashFeedback>();
         flashFeedback.PlayFeedback();
+    }
+
+    public void WaitTurn()
+    {
+        DeselectOldObject();
     }
 
     private void DeselectOldObject()

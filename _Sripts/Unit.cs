@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Unit : MonoBehaviour
+public class Unit : MonoBehaviour, ITurnDependant
 {
     [SerializeField]
     private int maxMovementPoints = 20;

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FinishedMovingFeedback : MonoBehaviour
+public class FinishedMovingFeedback : MonoBehaviour, ITurnDependant
 {
     [SerializeField]
     private SpriteRenderer spriteRenderer;
@@ -23,5 +23,10 @@ public class FinishedMovingFeedback : MonoBehaviour
     public void StopFeedback()
     {
         spriteRenderer.color = originalColor;
+    }
+
+    public void WaitTurn()
+    {
+        StopFeedback();
     }
 }

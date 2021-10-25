@@ -12,14 +12,20 @@ public class TurnBasedManager : MonoBehaviour
         Debug.Log("Waiting ... ");
         OnBlockPlayerInput?.Invoke();
 
-        foreach (Unit unit in FindObjectsOfType<Unit>())
+        foreach (PlayerTurnTaker turnTaker in FindObjectsOfType<PlayerTurnTaker>())
         {
-            unit.WaitTurn();
-            Debug.Log($"Unit {unit.name} is waiting");
+            turnTaker.WaitTurn();
+            Debug.Log($"Unit {turnTaker.name} is waiting");
         }
 
         Debug.Log("New turn ready!");
         OnUnblockPlayerInput?.Invoke();
 
     }
+}
+
+
+public interface ITurnDependant
+{
+    void WaitTurn();
 }
