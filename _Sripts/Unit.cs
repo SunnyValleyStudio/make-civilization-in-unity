@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,12 +15,22 @@ public class Unit : MonoBehaviour
 
     void Start()
     {
+        ResetMovementPoints();
+    }
+
+    private void ResetMovementPoints()
+    {
         currentMovementPoints = maxMovementPoints;
     }
 
     public bool CanStillMove()
     {
         return currentMovementPoints > 0;
+    }
+
+    public void WaitTurn()
+    {
+        ResetMovementPoints();
     }
 
     public void HandleMovement(Vector3 cardinalDirection, int movementCost)
