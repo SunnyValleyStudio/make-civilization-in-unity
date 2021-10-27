@@ -9,6 +9,9 @@ public class BuildingManager : MonoBehaviour
     private GameObject unitBuildUI;
     private Unit farmerUnit;
 
+    [SerializeField]
+    private GameObject townPrefab;
+
     public void HandleSelection(GameObject selectedObject)
     {
         ResetBuildingSystem();
@@ -37,5 +40,10 @@ public class BuildingManager : MonoBehaviour
     public void BuildStructure()
     {
         Debug.Log("Placing structure at " + this.farmerUnit.transform.position);
+        Instantiate(townPrefab, this.farmerUnit.transform.position, Quaternion.identity);
+
+        this.farmerUnit.DestroyUnit();
+
+        ResetBuildingSystem();
     }
 }
