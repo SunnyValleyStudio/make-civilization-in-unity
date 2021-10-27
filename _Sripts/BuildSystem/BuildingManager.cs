@@ -6,11 +6,8 @@ using UnityEngine;
 public class BuildingManager : MonoBehaviour
 {
     [SerializeField]
-    private GameObject unitBuildUI;
+    private UIBuildButtonHandler unitBuildUI;
     private Unit farmerUnit;
-
-    [SerializeField]
-    private GameObject townPrefab;
 
     public void HandleSelection(GameObject selectedObject)
     {
@@ -28,19 +25,19 @@ public class BuildingManager : MonoBehaviour
 
     private void HandleUnitSelection()
     {
-        unitBuildUI.SetActive(true);
+        unitBuildUI.ToggleVisibility(true);
     }
 
     private void ResetBuildingSystem()
     {
         farmerUnit = null;
-        unitBuildUI.SetActive(false);
+        unitBuildUI.ToggleVisibility(false);
     }
 
-    public void BuildStructure()
+    public void BuildStructure(GameObject structurePrefab)
     {
         Debug.Log("Placing structure at " + this.farmerUnit.transform.position);
-        Instantiate(townPrefab, this.farmerUnit.transform.position, Quaternion.identity);
+        Instantiate(structurePrefab, this.farmerUnit.transform.position, Quaternion.identity);
 
         this.farmerUnit.DestroyUnit();
 
