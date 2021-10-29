@@ -22,7 +22,8 @@ public class SelectionManager : MonoBehaviour, ITurnDependant
         }
 
         flashFeedback = detectedColldier.GetComponent<FlashFeedback>();
-        flashFeedback.PlayFeedback();
+        if (flashFeedback != null)
+            flashFeedback.PlayFeedback();
     }
 
     public void WaitTurn()

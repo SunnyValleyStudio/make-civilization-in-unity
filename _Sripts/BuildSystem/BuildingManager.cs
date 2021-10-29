@@ -12,6 +12,9 @@ public class BuildingManager : MonoBehaviour, ITurnDependant
     [SerializeField]
     private AudioSource audioSource;
 
+    [SerializeField]
+    private Map map;
+
     private void Awake()
     {
         audioSource = GetComponent<AudioSource>();
@@ -44,8 +47,16 @@ public class BuildingManager : MonoBehaviour, ITurnDependant
 
     public void BuildStructure(GameObject structurePrefab)
     {
+        if (map.IsPositionInvalid(this.farmerUnit.transform.position))
+        {
+            Debug.LogWarning("Structure already exists here");
+            return;
+        }
+
         Debug.Log("Placing structure at " + this.farmerUnit.transform.position);
-        Instantiate(structurePrefab, this.farmerUnit.transform.position, Quaternion.identity);
+        GameObject structure = Instantiate(structurePrefab, this.farmerUnit.transform.position, Quaternion.identity);
+
+        map.AddStructure(this.farmerUnit.transform.position, structure);
 
         audioSource.Play();
 
