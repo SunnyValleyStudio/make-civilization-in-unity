@@ -3,11 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BuildingManager : MonoBehaviour
+public class BuildingManager : MonoBehaviour, ITurnDependant
 {
     [SerializeField]
     private UIBuildButtonHandler unitBuildUI;
     private Unit farmerUnit;
+
+    [SerializeField]
+    private AudioSource audioSource;
+
+    private void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
 
     public void HandleSelection(GameObject selectedObject)
     {
@@ -17,7 +25,7 @@ public class BuildingManager : MonoBehaviour
             return;
 
         farmerUnit = selectedObject.GetComponent<Unit>();
-        if (farmerUnit != null)
+        if (farmerUnit != null && farmerUnit.CanStillMove())
         {
             HandleUnitSelection();
         }
@@ -39,8 +47,22 @@ public class BuildingManager : MonoBehaviour
         Debug.Log("Placing structure at " + this.farmerUnit.transform.position);
         Instantiate(structurePrefab, this.farmerUnit.transform.position, Quaternion.identity);
 
-        this.farmerUnit.DestroyUnit();
+        audioSource.Play();
 
+        if (structurePrefab.name == "TownStructure")
+        {
+            this.farmerUnit.DestroyUnit();
+        }
+        else
+        {
+            this.farmerUnit.FinishMovement();
+        }
+
+        ResetBuildingSystem();
+    }
+
+    public void WaitTurn()
+    {
         ResetBuildingSystem();
     }
 }

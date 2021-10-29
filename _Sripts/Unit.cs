@@ -54,4 +54,10 @@ public class Unit : MonoBehaviour, ITurnDependant
         FinishedMoving?.Invoke();
         Destroy(gameObject);
     }
+
+    public void FinishMovement()
+    {
+        this.currentMovementPoints = 0;
+        FinishedMoving?.Invoke();
+    }
 }
