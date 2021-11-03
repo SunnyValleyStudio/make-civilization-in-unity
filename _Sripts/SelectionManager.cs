@@ -6,6 +6,7 @@ using UnityEngine;
 public class SelectionManager : MonoBehaviour, ITurnDependant
 {
     FlashFeedback flashFeedback;
+    SelectionIndicatorFeedback selectionFeedback;
 
     public void HandleSelection(GameObject detectedColldier)
     {
@@ -13,6 +14,10 @@ public class SelectionManager : MonoBehaviour, ITurnDependant
 
         if (detectedColldier == null)
             return;
+
+        selectionFeedback = detectedColldier.GetComponent<SelectionIndicatorFeedback>();
+        if (selectionFeedback != null)
+            selectionFeedback.Select();
 
         Unit unit = detectedColldier.GetComponent<Unit>();
         if(unit != null)
@@ -33,10 +38,19 @@ public class SelectionManager : MonoBehaviour, ITurnDependant
 
     private void DeselectOldObject()
     {
-        if (flashFeedback == null)
-            return;
-        flashFeedback.StopFeedback();
-        flashFeedback = null;
+        if (flashFeedback != null)
+        {
+            flashFeedback.StopFeedback();
+            flashFeedback = null;
+        }
+        
+
+        if (selectionFeedback != null)
+        {
+            selectionFeedback.Deselect();
+            selectionFeedback = null;
+        }
+        
     }
 
 }
