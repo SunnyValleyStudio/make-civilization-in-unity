@@ -15,6 +15,9 @@ public class BuildingManager : MonoBehaviour, ITurnDependant
     [SerializeField]
     private Map map;
 
+    [SerializeField]
+    private InfoManager infoManager;
+
     private void Awake()
     {
         audioSource = GetComponent<AudioSource>();
@@ -63,6 +66,7 @@ public class BuildingManager : MonoBehaviour, ITurnDependant
         if (structurePrefab.name == "TownStructure")
         {
             this.farmerUnit.DestroyUnit();
+            infoManager.HideInfoPanel();
         }
         else
         {
