@@ -31,7 +31,13 @@ public class UnitCreatonManager : MonoBehaviour, ITurnDependant
 
     public void CreateUnity(GameObject unitToCreate)
     {
-        Instantiate(unitToCreate, selectedTown.transform.position, Quaternion.identity);
+        if (selectedTown.InProduction)
+        {
+            Debug.Log("Town already is producing a unit");
+            return;
+        }
+        selectedTown.AddUnitToProduction(unitToCreate);
+        ResetTownBuildUI();
     }
 
     private void ResetTownBuildUI()
