@@ -30,16 +30,22 @@ public class BuildingManager : MonoBehaviour, ITurnDependant
         if (selectedObject == null)
             return;
 
-        farmerUnit = selectedObject.GetComponent<Unit>();
-        if (farmerUnit != null && farmerUnit.CanStillMove())
+        Worker worker = selectedObject.GetComponent<Worker>();
+        if (worker != null)
         {
-            HandleUnitSelection();
+            HandleUnitSelection(worker);
         }
+
     }
 
-    private void HandleUnitSelection()
+    private void HandleUnitSelection(Worker worker)
     {
-        unitBuildUI.ToggleVisibility(true);
+        farmerUnit = worker.GetComponent<Unit>();
+        if (farmerUnit != null && farmerUnit.CanStillMove())
+        {
+            unitBuildUI.ToggleVisibility(true);
+        }
+        
     }
 
     private void ResetBuildingSystem()
