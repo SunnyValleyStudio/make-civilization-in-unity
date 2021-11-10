@@ -40,6 +40,7 @@ public class BuildingManager : MonoBehaviour, ITurnDependant
 
     private void HandleUnitSelection(Worker worker)
     {
+
         farmerUnit = worker.GetComponent<Unit>();
         if (farmerUnit != null && farmerUnit.CanStillMove())
         {

@@ -6,12 +6,16 @@ using UnityEngine.Events;
 
 public class Unit : MonoBehaviour, ITurnDependant
 {
-    [SerializeField]
-    private int maxMovementPoints = 20;
-
     private int currentMovementPoints;
 
     public UnityEvent FinishedMoving;
+
+    private UnitData unitData;
+
+    private void Awake()
+    {
+        unitData = GetComponent<UnitData>();
+    }
 
     void Start()
     {
@@ -20,7 +24,7 @@ public class Unit : MonoBehaviour, ITurnDependant
 
     private void ResetMovementPoints()
     {
-        currentMovementPoints = maxMovementPoints;
+        currentMovementPoints = unitData.Data.movementRange;
     }
 
     public bool CanStillMove()
