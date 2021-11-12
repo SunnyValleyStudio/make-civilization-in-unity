@@ -45,12 +45,15 @@ public class BuildingManager : MonoBehaviour, ITurnDependant
         if (farmerUnit != null && farmerUnit.CanStillMove())
         {
             unitBuildUI.ToggleVisibility(true);
+            farmerUnit.FinishedMoving.AddListener(ResetBuildingSystem);
         }
         
     }
 
     private void ResetBuildingSystem()
     {
+        if (farmerUnit != null)
+            farmerUnit.FinishedMoving.RemoveListener(ResetBuildingSystem);
         farmerUnit = null;
         unitBuildUI.ToggleVisibility(false);
     }
