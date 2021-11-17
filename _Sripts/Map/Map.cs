@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -5,7 +6,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class Map : MonoBehaviour
-{
+{ 
     Dictionary<Vector3Int, GameObject> buildings 
         = new Dictionary<Vector3Int, GameObject>();
 
@@ -24,6 +25,14 @@ public class Map : MonoBehaviour
         islandTiles = GetTilemapWorldPositionsFrom(islandColldiersTilemap);
         emptyTiles = GetEmptyTiles(islandTiles, forestTiles.Concat(mountainTiles).ToList());
     }
+
+    public bool CanIMoveTo(Vector2 unitPosition)
+    {
+        Vector2Int unityTilePosition = Vector2Int.FloorToInt(unitPosition);
+
+        return emptyTiles.Contains(unityTilePosition) || forestTiles.Contains(unityTilePosition);
+    }
+
     private List<Vector2Int> GetEmptyTiles(List<Vector2Int> islandTiles, List<Vector2Int> nonEmptyTiles)
     {
         HashSet<Vector2Int> emptyTilesHashset = new HashSet<Vector2Int>(islandTiles);
@@ -92,7 +101,7 @@ public class Map : MonoBehaviour
             Gizmos.color = color;
             foreach (Vector2Int pos in tiles)
             {
-                Gizmos.DrawSphere(new Vector3(pos.x, pos.y, 0), 0.3f);
+                Gizmos.DrawSphere(new Vector3(pos.x+0.5f, pos.y+0.5f, 0), 0.3f);
             }
         }
     }
