@@ -11,31 +11,55 @@ public class Map : MonoBehaviour
         = new Dictionary<Vector3Int, GameObject>();
 
     [SerializeField]
-    private Tilemap islandColldiersTilemap, seaTilemap, forestTilemap, mountainsTilemap;
+    private Tilemap islandColldiersTilemap, seaTilemap, 
+        forestTilemap, mountainsTilemap;
 
-    private List<Vector2Int> islandTiles, forestTiles, mountainTiles, emptyTiles;
+    private List<Vector2Int> islandTiles, forestTiles, 
+        mountainTiles, emptyTiles;
 
     [SerializeField]
     private bool showEmpty, showMountains, showForest;
+
+    private MapGrid mapGrid;
 
     private void Awake()
     {
         forestTiles = GetTilemapWorldPositionsFrom(forestTilemap);
         mountainTiles = GetTilemapWorldPositionsFrom(mountainsTilemap);
         islandTiles = GetTilemapWorldPositionsFrom(islandColldiersTilemap);
-        emptyTiles = GetEmptyTiles(islandTiles, forestTiles.Concat(mountainTiles).ToList());
+        emptyTiles =
+            GetEmptyTiles(islandTiles, forestTiles.Concat(mountainTiles).ToList());
+        
+        PrepareMapGrid();
+    }
+
+    private void PrepareMapGrid()
+    {
+        mapGrid = new MapGrid();
+
+        mapGrid.AddToGrid(
+            forestTilemap.GetComponent<TerrainTypeReference>().GetTerrainData(),
+            forestTiles);
+        mapGrid.AddToGrid(
+            mountainsTilemap.GetComponent<TerrainTypeReference>().GetTerrainData(),
+            mountainTiles);
+        mapGrid.AddToGrid(
+            islandColldiersTilemap.GetComponent<TerrainTypeReference>().GetTerrainData(),
+            emptyTiles);
     }
 
     public bool CanIMoveTo(Vector2 unitPosition)
     {
         Vector2Int unityTilePosition = Vector2Int.FloorToInt(unitPosition);
 
-        return emptyTiles.Contains(unityTilePosition) || forestTiles.Contains(unityTilePosition);
+        return emptyTiles.Contains(unityTilePosition) 
+            || forestTiles.Contains(unityTilePosition);
     }
 
     private List<Vector2Int> GetEmptyTiles(List<Vector2Int> islandTiles, List<Vector2Int> nonEmptyTiles)
     {
-        HashSet<Vector2Int> emptyTilesHashset = new HashSet<Vector2Int>(islandTiles);
+        HashSet<Vector2Int> emptyTilesHashset 
+            = new HashSet<Vector2Int>(islandTiles);
         emptyTilesHashset.ExceptWith(nonEmptyTiles);
         return new List<Vector2Int>(emptyTilesHashset);
     }
