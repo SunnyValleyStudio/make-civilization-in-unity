@@ -31,7 +31,7 @@ public class CharacterMovement : MonoBehaviour
 
         Vector2 direction = CalculateMovementDirection(endPosition);
 
-        if(map.CanIMoveTo((Vector2)this.selectedUnit.transform.position + direction))
+        if(map.CanIMoveTo(this.selectedUnit.transform.position, direction))
         {
             this.selectedUnit.HandleMovement(direction, 10);
         }

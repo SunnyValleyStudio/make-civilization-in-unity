@@ -48,12 +48,19 @@ public class Map : MonoBehaviour
             emptyTiles);
     }
 
-    public bool CanIMoveTo(Vector2 unitPosition)
+    public bool CanIMoveTo(Vector2 unitPosition, Vector2 direction)
     {
-        Vector2Int unityTilePosition = Vector2Int.FloorToInt(unitPosition);
+        Vector2Int unitTilePosition = Vector2Int.FloorToInt(unitPosition + direction);
 
-        return emptyTiles.Contains(unityTilePosition) 
-            || forestTiles.Contains(unityTilePosition);
+        List<Vector2Int> neighbours 
+            = mapGrid.GetNeighboursFor(Vector2Int.FloorToInt(unitPosition));
+
+        foreach (Vector2Int cellPosition in neighbours)
+        {
+            Debug.Log(cellPosition);
+        }
+
+        return neighbours.Contains(unitTilePosition) && mapGrid.CheckIfPositionIsValid(unitTilePosition);
     }
 
     private List<Vector2Int> GetEmptyTiles(List<Vector2Int> islandTiles, List<Vector2Int> nonEmptyTiles)
