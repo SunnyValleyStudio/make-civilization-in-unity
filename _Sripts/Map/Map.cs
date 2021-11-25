@@ -20,6 +20,12 @@ public class Map : MonoBehaviour
     [SerializeField]
     private bool showEmpty, showMountains, showForest;
 
+    public Dictionary<Vector2Int, Vector2Int?> GetMovementRange(Vector3 worldPosition, int currentMovementPoints)
+    {
+        Vector3Int cellWorldPosition = GetCellWorldPositionFor(worldPosition);
+        return GraphSearch.BFS(mapGrid, (Vector2Int)cellWorldPosition, currentMovementPoints);
+    }
+
     private MapGrid mapGrid;
 
     private void Awake()
@@ -48,20 +54,26 @@ public class Map : MonoBehaviour
             emptyTiles);
     }
 
-    public bool CanIMoveTo(Vector2 unitPosition, Vector2 direction)
+    public int GetMovementCost(Vector2Int cellWorldPosition)
     {
-        Vector2Int unitTilePosition = Vector2Int.FloorToInt(unitPosition + direction);
-
-        List<Vector2Int> neighbours 
-            = mapGrid.GetNeighboursFor(Vector2Int.FloorToInt(unitPosition));
-
-        foreach (Vector2Int cellPosition in neighbours)
-        {
-            Debug.Log(cellPosition);
-        }
-
-        return neighbours.Contains(unitTilePosition) && mapGrid.CheckIfPositionIsValid(unitTilePosition);
+        return mapGrid.GetMovementCost(cellWorldPosition);
     }
+
+    //public bool CanIMoveTo(Vector2 unitPosition, Vector2 direction)
+    //{
+    //    Vector2Int unitTilePosition = Vector2Int.FloorToInt(unitPosition + direction);
+
+    //    List<Vector2Int> neighbours 
+    //        = mapGrid.GetNeighboursFor(Vector2Int.FloorToInt(unitPosition));
+
+    //    foreach (Vector2Int cellPosition in neighbours)
+    //    {
+    //        Debug.Log(cellPosition);
+    //    }
+
+    //    return neighbours.Contains(unitTilePosition) 
+    //        && mapGrid.CheckIfPositionIsValid(unitTilePosition);
+    //}
 
     private List<Vector2Int> GetEmptyTiles(List<Vector2Int> islandTiles, List<Vector2Int> nonEmptyTiles)
     {
@@ -86,7 +98,7 @@ public class Map : MonoBehaviour
         return tempList;
     }
 
-    private Vector3Int GetCellPositionFor(Vector3 worldPosition)
+    private Vector3Int GetCellWorldPositionFor(Vector3 worldPosition)
     {
         return Vector3Int.CeilToInt(islandColldiersTilemap
             .CellToWorld(islandColldiersTilemap.WorldToCell(worldPosition)));
@@ -100,7 +112,7 @@ public class Map : MonoBehaviour
 
     public void AddStructure(Vector3 worldPosition, GameObject structure)
     {
-        Vector3Int position = GetCellPositionFor(worldPosition);
+        Vector3Int position = GetCellWorldPositionFor(worldPosition);
 
         if (buildings.ContainsKey(position))
         {
@@ -113,7 +125,7 @@ public class Map : MonoBehaviour
 
     public bool IsPositionInvalid(Vector3 worldPosition)
     {
-        return buildings.ContainsKey(GetCellPositionFor(worldPosition));
+        return buildings.ContainsKey(GetCellWorldPositionFor(worldPosition));
     }
 
     private void OnDrawGizmos()

@@ -12,3 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec839e9ef8a099b4e84c1c7b520a48cc, type: 3}
   m_Name: FarmerData
   m_EditorClassIdentifier: 
+  movementRange: 20
+  health: 1
+  attackStrength: 1

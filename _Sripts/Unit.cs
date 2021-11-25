@@ -12,6 +12,8 @@ public class Unit : MonoBehaviour, ITurnDependant
 
     private UnitData unitData;
 
+    public int CurrentMovementPoints { get => currentMovementPoints;}
+
     private void Awake()
     {
         unitData = GetComponent<UnitData>();

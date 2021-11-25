@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 
@@ -11,6 +12,8 @@ public class CharacterMovement : MonoBehaviour
 
     private Unit selectedUnit;
 
+    private List<Vector2Int> movementRange;
+
     public void HandleSelection(GameObject detectedObject)
     {
         if (detectedObject == null)
@@ -19,6 +22,15 @@ public class CharacterMovement : MonoBehaviour
             return;
         }
         this.selectedUnit = detectedObject.GetComponent<Unit>();
+        movementRange = map.GetMovementRange(
+            this.selectedUnit.transform.position,
+            this.selectedUnit.CurrentMovementPoints
+            ).Keys.ToList();
+
+        //foreach (Vector2Int position in movementRange)
+        //{
+        //    Debug.Log(position);
+        //}
     }
 
     public void HandleMovement(Vector3 endPosition)
@@ -31,9 +43,14 @@ public class CharacterMovement : MonoBehaviour
 
         Vector2 direction = CalculateMovementDirection(endPosition);
 
-        if(map.CanIMoveTo(this.selectedUnit.transform.position, direction))
+        Vector2Int unitTilePosition = 
+            Vector2Int.FloorToInt(
+                (Vector2)this.selectedUnit.transform.position + direction);
+
+        if (movementRange.Contains(unitTilePosition))
         {
-            this.selectedUnit.HandleMovement(direction, 10);
+            int cost = map.GetMovementCost(unitTilePosition);
+            this.selectedUnit.HandleMovement(direction, cost);
         }
         else
         {
