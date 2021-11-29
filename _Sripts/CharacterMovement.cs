@@ -14,23 +14,42 @@ public class CharacterMovement : MonoBehaviour
 
     private List<Vector2Int> movementRange;
 
+    [SerializeField]
+    private MovementRangeHighlight rangeHighlight;
+
     public void HandleSelection(GameObject detectedObject)
     {
         if (detectedObject == null)
         {
-            this.selectedUnit = null;
+            ResetCharacterMovement();
             return;
         }
         this.selectedUnit = detectedObject.GetComponent<Unit>();
-        movementRange = map.GetMovementRange(
-            this.selectedUnit.transform.position,
-            this.selectedUnit.CurrentMovementPoints
-            ).Keys.ToList();
+
+        if (this.selectedUnit.CanStillMove())
+            PrepareMovementRange();
+        else
+            rangeHighlight.ClearHighlight();
 
         //foreach (Vector2Int position in movementRange)
         //{
         //    Debug.Log(position);
         //}
+    }
+
+    private void PrepareMovementRange()
+    {
+        movementRange = map.GetMovementRange(
+                    this.selectedUnit.transform.position,
+                    this.selectedUnit.CurrentMovementPoints
+                    ).Keys.ToList();
+        rangeHighlight.HighlightTiles(movementRange);
+    }
+
+    private void ResetCharacterMovement()
+    {
+        rangeHighlight.ClearHighlight();
+        this.selectedUnit = null;
     }
 
     public void HandleMovement(Vector3 endPosition)
@@ -51,6 +70,14 @@ public class CharacterMovement : MonoBehaviour
         {
             int cost = map.GetMovementCost(unitTilePosition);
             this.selectedUnit.HandleMovement(direction, cost);
+            if (this.selectedUnit.CanStillMove())
+            {
+                PrepareMovementRange();
+            }
+            else
+            {
+                rangeHighlight.ClearHighlight();
+            }
         }
         else
         {
