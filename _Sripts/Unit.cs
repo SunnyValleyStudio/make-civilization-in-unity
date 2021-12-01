@@ -14,6 +14,10 @@ public class Unit : MonoBehaviour, ITurnDependant
 
     public int CurrentMovementPoints { get => currentMovementPoints;}
 
+    [SerializeField]
+    private LayerMask enemyDetectionLayer;
+
+
     private void Awake()
     {
         unitData = GetComponent<UnitData>();
@@ -49,10 +53,37 @@ public class Unit : MonoBehaviour, ITurnDependant
 
         currentMovementPoints -= movementCost;
 
+        GameObject enemyUnity = CheckIfEnemyUnitInDirection(cardinalDirection);
+        if(enemyUnity == null)
+        {
+            transform.position += cardinalDirection;
+        }
+        else
+        {
+            PerformAttack(enemyUnity.GetComponent<Health>());
+        }
+
         if (currentMovementPoints <= 0)
             FinishedMoving?.Invoke();
 
-        transform.position += cardinalDirection;
+        
+    }
+
+    private void PerformAttack(Health health)
+    {
+        health.GetHit(unitData.Data.attackStrength);
+        currentMovementPoints = 0;
+    }
+
+    private GameObject CheckIfEnemyUnitInDirection(Vector3 cardinalDirection)
+    {
+        RaycastHit2D hit =
+            Physics2D.Raycast(transform.position, cardinalDirection, 1, enemyDetectionLayer);
+        if (hit.collider != null)
+        {
+            return hit.collider.gameObject;
+        }
+        return null;
     }
 
     public void DestroyUnit()
@@ -66,4 +97,5 @@ public class Unit : MonoBehaviour, ITurnDependant
         this.currentMovementPoints = 0;
         FinishedMoving?.Invoke();
     }
+
 }

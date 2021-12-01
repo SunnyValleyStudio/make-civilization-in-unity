@@ -26,6 +26,9 @@ public class CharacterMovement : MonoBehaviour
         }
         this.selectedUnit = detectedObject.GetComponent<Unit>();
 
+        if (this.selectedUnit == null)
+            return;
+
         if (this.selectedUnit.CanStillMove())
             PrepareMovementRange();
         else
