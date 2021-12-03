@@ -24,7 +24,10 @@ public class CharacterMovement : MonoBehaviour
             ResetCharacterMovement();
             return;
         }
-        this.selectedUnit = detectedObject.GetComponent<Unit>();
+        if (detectedObject.CompareTag("Player"))
+            this.selectedUnit = detectedObject.GetComponent<Unit>();
+        else
+            this.selectedUnit = null;
 
         if (this.selectedUnit == null)
             return;
