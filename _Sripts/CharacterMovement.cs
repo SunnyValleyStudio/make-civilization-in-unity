@@ -45,11 +45,16 @@ public class CharacterMovement : MonoBehaviour
 
     private void PrepareMovementRange()
     {
-        movementRange = map.GetMovementRange(
-                    this.selectedUnit.transform.position,
-                    this.selectedUnit.CurrentMovementPoints
-                    ).Keys.ToList();
+        movementRange = GetMovementRangeFor(this.selectedUnit).Keys.ToList();
         rangeHighlight.HighlightTiles(movementRange);
+    }
+
+    public Dictionary<Vector2Int, Vector2Int?> GetMovementRangeFor(Unit selectedUnit)
+    {
+        return map.GetMovementRange(
+                            selectedUnit.transform.position,
+                            selectedUnit.CurrentMovementPoints
+                            );
     }
 
     private void ResetCharacterMovement()

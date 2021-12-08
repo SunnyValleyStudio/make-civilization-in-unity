@@ -17,10 +17,12 @@ public class Unit : MonoBehaviour, ITurnDependant
     [SerializeField]
     private LayerMask enemyDetectionLayer;
 
+    private AudioSource stepSound;
 
     private void Awake()
     {
         unitData = GetComponent<UnitData>();
+        stepSound = GetComponent<AudioSource>();
     }
 
     void Start()
@@ -56,6 +58,7 @@ public class Unit : MonoBehaviour, ITurnDependant
         GameObject enemyUnity = CheckIfEnemyUnitInDirection(cardinalDirection);
         if(enemyUnity == null)
         {
+            stepSound.Play();
             transform.position += cardinalDirection;
         }
         else
