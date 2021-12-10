@@ -11,15 +11,20 @@ public class BasicEnemyAI : MonoBehaviour, IEnemyAI
     private Unit unit;
     private CharacterMovement characterMovement;
 
+    [SerializeField] private FlashFeedback selectionFeedback;
+
     private void Awake()
     {
         characterMovement = FindObjectOfType<CharacterMovement>();
         unit = GetComponent<Unit>();
+        selectionFeedback = GetComponent<FlashFeedback>();
     }
 
     public void StartTurn()
     {
         Debug.Log($"Enemy: {gameObject.name} takes turn.");
+
+        selectionFeedback.PlayFeedback();
 
         Dictionary<Vector2Int, Vector2Int?> movementRange
             = characterMovement.GetMovementRangeFor(unit);
@@ -32,8 +37,34 @@ public class BasicEnemyAI : MonoBehaviour, IEnemyAI
 
     private List<Vector2Int> GetPathToRandomPosition(Dictionary<Vector2Int, Vector2Int?> movementRange)
     {
-        Debug.Log(movementRange.Keys.ToList()[2]);
-        return new List<Vector2Int> { movementRange.Keys.ToList()[2] };
+        List<Vector2Int> possibleDestionation = movementRange.Keys.ToList();
+        possibleDestionation.Remove(Vector2Int.RoundToInt(transform.position));
+        
+        Vector2Int selectedDestination = 
+            possibleDestionation[
+                UnityEngine.Random.Range(0, possibleDestionation.Count)];
+
+        List<Vector2Int> listToRetuen = 
+            GetPathTo(selectedDestination, movementRange);
+
+        return listToRetuen;
+    }
+
+    private List<Vector2Int> GetPathTo(Vector2Int destination, Dictionary<Vector2Int, Vector2Int?> movementRange)
+    {
+        List<Vector2Int> path = new List<Vector2Int>();
+
+        path.Add(destination);
+
+        while (movementRange[destination] != null)
+        {
+            path.Add(movementRange[destination].Value);
+            destination = movementRange[destination].Value;
+        }
+
+        path.Reverse();
+
+        return path.Skip(1).ToList();
     }
 
     private IEnumerator MoveUnit(Queue<Vector2Int> path)
@@ -41,7 +72,7 @@ public class BasicEnemyAI : MonoBehaviour, IEnemyAI
         yield return new WaitForSeconds(0.5f);
         if (unit.CanStillMove() == false || path.Count <= 0)
         {
-            TurnFinished?.Invoke();
+            FinishMovement();
             yield break;
         }
         Vector2Int pos = path.Dequeue();
@@ -57,7 +88,13 @@ public class BasicEnemyAI : MonoBehaviour, IEnemyAI
         else
         {
             yield return new WaitForSeconds(0.5f);
-            TurnFinished?.Invoke();
+            FinishMovement();
         }
+    }
+
+    private void FinishMovement()
+    {
+        TurnFinished?.Invoke();
+        selectionFeedback.StopFeedback();
     }
 }
