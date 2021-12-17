@@ -6,6 +6,7 @@ using UnityEngine;
 public class SelectionManager : MonoBehaviour, ITurnDependant
 {
     FlashFeedback flashFeedback;
+    AgentOutlineFeedback outlineFeedback;
     SelectionIndicatorFeedback selectionFeedback;
 
     public void HandleSelection(GameObject detectedColldier)
@@ -29,6 +30,10 @@ public class SelectionManager : MonoBehaviour, ITurnDependant
         flashFeedback = detectedColldier.GetComponent<FlashFeedback>();
         if (flashFeedback != null)
             flashFeedback.PlayFeedback();
+
+        outlineFeedback = detectedColldier.GetComponent<AgentOutlineFeedback>();
+        if (outlineFeedback != null)
+            outlineFeedback.Select();
     }
 
     public void WaitTurn()
@@ -43,7 +48,13 @@ public class SelectionManager : MonoBehaviour, ITurnDependant
             flashFeedback.StopFeedback();
             flashFeedback = null;
         }
-        
+
+        if (outlineFeedback != null)
+        {
+            outlineFeedback.Deselect();
+            outlineFeedback = null;
+        }
+
 
         if (selectionFeedback != null)
         {
