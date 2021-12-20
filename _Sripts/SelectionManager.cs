@@ -41,7 +41,7 @@ public class SelectionManager : MonoBehaviour, ITurnDependant
         DeselectOldObject();
     }
 
-    private void DeselectOldObject()
+    public void DeselectOldObject()
     {
         if (flashFeedback != null)
         {

@@ -57,9 +57,10 @@ public class CharacterMovement : MonoBehaviour
                             );
     }
 
-    private void ResetCharacterMovement()
+    public void ResetCharacterMovement()
     {
-        rangeHighlight.ClearHighlight();
+        if(rangeHighlight != null)
+            rangeHighlight.ClearHighlight();
         this.selectedUnit = null;
     }
 
