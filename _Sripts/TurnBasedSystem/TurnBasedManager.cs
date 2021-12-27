@@ -14,8 +14,17 @@ public class TurnBasedManager : MonoBehaviour
     {
         Debug.Log("Waiting ... ");
         OnBlockPlayerInput?.Invoke();
+        SystemsTurn();
         EnemiesTurn();
 
+    }
+
+    private void SystemsTurn()
+    {
+        foreach (SystemTurnTaker turnTaker in FindObjectsOfType<SystemTurnTaker>())
+        {
+            turnTaker.WaitTurn();
+        }
     }
 
     private void EnemiesTurn()

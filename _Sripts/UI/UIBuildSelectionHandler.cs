@@ -11,12 +11,15 @@ public class UIBuildSelectionHandler : MonoBehaviour, IPointerClickHandler
 
     private UIBuildButtonHandler buttonHandler;
 
+    private UiHighlight uiHighlight;
+
     [SerializeField]
     private bool interactable = false;
 
     private void Awake()
     {
         buttonHandler = GetComponentInParent<UIBuildButtonHandler>();
+        uiHighlight = GetComponent<UiHighlight>();
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -27,5 +30,11 @@ public class UIBuildSelectionHandler : MonoBehaviour, IPointerClickHandler
             return;
         }
         buttonHandler.PrepareBuildButton(this.buildData);
+        uiHighlight.ToggleHighlight(true);
+    }
+
+    public void Reset()
+    {
+        uiHighlight.ToggleHighlight(false);
     }
 }

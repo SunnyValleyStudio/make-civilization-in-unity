@@ -12,6 +12,9 @@ public class UIBuildButtonHandler : MonoBehaviour
     private BuildDataSO buildData;
 
     [SerializeField]
+    private Transform UiElementsParent;
+
+    [SerializeField]
     private UnityEvent<BuildDataSO> OnBuildButtonClick;
 
     private void Start()
@@ -20,6 +23,7 @@ public class UIBuildButtonHandler : MonoBehaviour
     }
     public void PrepareBuildButton(BuildDataSO buildData)
     {
+        ResetUiElements();
         this.buildData = buildData;
         this.buildBtn.gameObject.SetActive(true);
     }
@@ -34,6 +38,15 @@ public class UIBuildButtonHandler : MonoBehaviour
     public void HandleButtonClick()
     {
         OnBuildButtonClick?.Invoke(this.buildData);
+        ResetUiElements();
+    }
+
+    private void ResetUiElements()
+    {
+        foreach (Transform selectionHandler in UiElementsParent)
+        {
+            selectionHandler.GetComponent<UIBuildSelectionHandler>().Reset();
+        }
     }
 
     public void ToggleVisibility(bool val)
@@ -42,6 +55,7 @@ public class UIBuildButtonHandler : MonoBehaviour
         if (val == true)
         {
             ResetBuildButton();
+            ResetUiElements();
         }
     }
 }
