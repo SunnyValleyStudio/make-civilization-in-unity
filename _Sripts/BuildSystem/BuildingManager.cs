@@ -18,6 +18,9 @@ public class BuildingManager : MonoBehaviour, ITurnDependant
     [SerializeField]
     private InfoManager infoManager;
 
+    [SerializeField]
+    ResourceManager resourceManager;
+
     private void Awake()
     {
         audioSource = GetComponent<AudioSource>();
@@ -58,7 +61,7 @@ public class BuildingManager : MonoBehaviour, ITurnDependant
         unitBuildUI.ToggleVisibility(false);
     }
 
-    public void BuildStructure(GameObject structurePrefab)
+    public void BuildStructure(BuildDataSO buildData)
     {
         if (map.IsPositionInvalid(this.farmerUnit.transform.position))
         {
@@ -66,14 +69,16 @@ public class BuildingManager : MonoBehaviour, ITurnDependant
             return;
         }
 
+        resourceManager.SpendResource(buildData.buildCost);
+
         Debug.Log("Placing structure at " + this.farmerUnit.transform.position);
-        GameObject structure = Instantiate(structurePrefab, this.farmerUnit.transform.position, Quaternion.identity);
+        GameObject structure = Instantiate(buildData.prefab, this.farmerUnit.transform.position, Quaternion.identity);
 
         map.AddStructure(this.farmerUnit.transform.position, structure);
 
         audioSource.Play();
 
-        if (structurePrefab.name == "TownStructure")
+        if (buildData.prefab.name == "TownStructure")
         {
             this.farmerUnit.DestroyUnit();
             infoManager.HideInfoPanel();

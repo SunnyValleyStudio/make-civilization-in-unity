@@ -9,31 +9,31 @@ public class UIBuildButtonHandler : MonoBehaviour
     [SerializeField]
     private Button buildBtn;
 
-    private GameObject structurePrefab;
+    private BuildDataSO buildData;
 
     [SerializeField]
-    private UnityEvent<GameObject> OnBuildButtonClick;
+    private UnityEvent<BuildDataSO> OnBuildButtonClick;
 
     private void Start()
     {
         gameObject.SetActive(false);
     }
-    public void PrepareBuildButton(GameObject structurePrefab)
+    public void PrepareBuildButton(BuildDataSO buildData)
     {
-        this.structurePrefab = structurePrefab;
+        this.buildData = buildData;
         this.buildBtn.gameObject.SetActive(true);
     }
 
     public void ResetBuildButton()
     {
-        this.structurePrefab = null;
+        this.buildData = null;
         this.buildBtn.gameObject.SetActive(false);
 
     }
 
     public void HandleButtonClick()
     {
-        OnBuildButtonClick?.Invoke(this.structurePrefab);
+        OnBuildButtonClick?.Invoke(this.buildData);
     }
 
     public void ToggleVisibility(bool val)

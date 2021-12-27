@@ -6,7 +6,8 @@ using UnityEngine.EventSystems;
 public class UIBuildSelectionHandler : MonoBehaviour, IPointerClickHandler
 {
     [SerializeField]
-    private GameObject structurePrefab;
+    private BuildDataSO buildData;
+    public BuildDataSO BuildData { get => buildData; }
 
     private UIBuildButtonHandler buttonHandler;
 
@@ -25,6 +26,6 @@ public class UIBuildSelectionHandler : MonoBehaviour, IPointerClickHandler
             buttonHandler.ResetBuildButton();
             return;
         }
-        buttonHandler.PrepareBuildButton(this.structurePrefab);
+        buttonHandler.PrepareBuildButton(this.buildData);
     }
 }
