@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,13 +15,21 @@ public class UIBuildButtonHandler : MonoBehaviour
     [SerializeField]
     private Transform UiElementsParent;
 
+    private List<UIBuildSelectionHandler> buildOptions;
+
     [SerializeField]
     private UnityEvent<BuildDataSO> OnBuildButtonClick;
 
     private void Start()
     {
         gameObject.SetActive(false);
+        buildOptions = new List<UIBuildSelectionHandler>();
+        foreach (Transform selectionHandler in UiElementsParent)
+        {
+            buildOptions.Add(selectionHandler.GetComponent<UIBuildSelectionHandler>());
+        }
     }
+
     public void PrepareBuildButton(BuildDataSO buildData)
     {
         ResetUiElements();
@@ -43,19 +52,42 @@ public class UIBuildButtonHandler : MonoBehaviour
 
     private void ResetUiElements()
     {
-        foreach (Transform selectionHandler in UiElementsParent)
+        foreach (UIBuildSelectionHandler selectionHandler in buildOptions)
         {
-            selectionHandler.GetComponent<UIBuildSelectionHandler>().Reset();
+            selectionHandler.Reset();
         }
     }
 
-    public void ToggleVisibility(bool val)
+    public void ToggleVisibility(bool val, ResourceManager resourceManager)
     {
         gameObject.SetActive(val);
         if (val == true)
         {
+            PrepareBuildOptions(resourceManager);
             ResetBuildButton();
             ResetUiElements();
+        }
+    }
+
+    private void PrepareBuildOptions(ResourceManager resourceManager)
+    {
+        foreach (UIBuildSelectionHandler buildItem in buildOptions)
+        {
+            if (buildItem.BuildData == null)
+            {
+                buildItem.ToggleActive(false);
+                continue;
+            }
+            buildItem.ToggleActive(true);
+            foreach (ResourceValue item in buildItem.BuildData.buildCost)
+            {
+                if (resourceManager.CheckResourceAvailability(item) == false)
+                {
+                    buildItem.ToggleActive(false);
+                    break;
+                }
+
+            }
         }
     }
 }

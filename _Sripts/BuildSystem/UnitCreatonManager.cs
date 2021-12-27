@@ -10,6 +10,9 @@ public class UnitCreatonManager : MonoBehaviour, ITurnDependant
 
     private Town selectedTown = null;
 
+    [SerializeField]
+    private ResourceManager resourcemanager;
+
     public void HandleSelection(GameObject selectedObject)
     {
         ResetTownBuildUI();
@@ -26,23 +29,24 @@ public class UnitCreatonManager : MonoBehaviour, ITurnDependant
 
     private void HandleTown(Town selectedTown)
     {
-        townUi.ToggleVisibility(true);
+        townUi.ToggleVisibility(true, resourcemanager);
     }
 
-    public void CreateUnity(GameObject unitToCreate)
+    public void CreateUnity(BuildDataSO unitData)
     {
         if (selectedTown.InProduction)
         {
             Debug.Log("Town already is producing a unit");
             return;
         }
-        selectedTown.AddUnitToProduction(unitToCreate);
+        resourcemanager.SpendResource(unitData.buildCost);
+        selectedTown.AddUnitToProduction(unitData.prefab);
         ResetTownBuildUI();
     }
 
     private void ResetTownBuildUI()
     {
-        townUi.ToggleVisibility(false);
+        townUi.ToggleVisibility(false, resourcemanager);
         selectedTown = null;
     }
 

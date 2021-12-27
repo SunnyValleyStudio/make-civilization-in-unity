@@ -47,7 +47,7 @@ public class BuildingManager : MonoBehaviour, ITurnDependant
         farmerUnit = worker.GetComponent<Unit>();
         if (farmerUnit != null && farmerUnit.CanStillMove())
         {
-            unitBuildUI.ToggleVisibility(true);
+            unitBuildUI.ToggleVisibility(true, resourceManager);
             farmerUnit.FinishedMoving.AddListener(ResetBuildingSystem);
         }
         
@@ -58,7 +58,7 @@ public class BuildingManager : MonoBehaviour, ITurnDependant
         if (farmerUnit != null)
             farmerUnit.FinishedMoving.RemoveListener(ResetBuildingSystem);
         farmerUnit = null;
-        unitBuildUI.ToggleVisibility(false);
+        unitBuildUI.ToggleVisibility(false, resourceManager);
     }
 
     public void BuildStructure(BuildDataSO buildData)
