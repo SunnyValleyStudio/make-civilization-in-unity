@@ -74,6 +74,10 @@ public class BuildingManager : MonoBehaviour, ITurnDependant
         Debug.Log("Placing structure at " + this.farmerUnit.transform.position);
         GameObject structure = Instantiate(buildData.prefab, this.farmerUnit.transform.position, Quaternion.identity);
 
+        ResourceProducer resourceProducer = structure.GetComponent<ResourceProducer>();
+        if (resourceProducer != null)
+            resourceProducer.Initialize(buildData);
+        
         map.AddStructure(this.farmerUnit.transform.position, structure);
 
         audioSource.Play();

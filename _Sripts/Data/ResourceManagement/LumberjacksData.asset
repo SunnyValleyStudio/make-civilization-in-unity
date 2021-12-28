@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df93c4eacfadb1741b2bcc7daebae9a3, type: 3}
   m_Name: LumberjacksData
   m_EditorClassIdentifier: 
-  prefab: {fileID: 294022593180414989, guid: ff8603606dde24e499e38aa264403735, type: 3}
+  prefab: {fileID: 1551416231856959251, guid: 9f3aab70e1d0b414db2079a243326067, type: 3}
   buildCost:
   - resourceType: 3
     resourceAmount: 10
