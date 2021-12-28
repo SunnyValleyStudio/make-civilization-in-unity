@@ -13,6 +13,7 @@ public class Unit : MonoBehaviour, ITurnDependant
     private UnitData unitData;
 
     public int CurrentMovementPoints { get => currentMovementPoints;}
+    public event Action OnMove;
 
     [SerializeField]
     private LayerMask enemyDetectionLayer;
@@ -60,6 +61,7 @@ public class Unit : MonoBehaviour, ITurnDependant
         {
             stepSound.Play();
             transform.position += cardinalDirection;
+            OnMove?.Invoke();
         }
         else
         {
